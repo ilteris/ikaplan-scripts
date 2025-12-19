@@ -1,0 +1,75 @@
+import argparse
+import sys
+import logging as log
+import config
+from version import __version__
+import dotfiles
+import preferences
+import shared_file_lists
+import system_preferences
+import ssh_files
+import startup_items
+import app_store_preferences
+import app_support_fonts
+
+def backup():
+    system_preferences.backup()
+    startup_items.backup()
+    # dotfiles.backup()
+    shared_file_lists.backup()
+    ssh_files.backup()
+    preferences.backup()
+    app_store_preferences.backup()
+    app_support_fonts.backup()
+    print('Backup Complete.')
+
+
+def restore():
+    system_preferences.restore()
+    startup_items.restore()
+    # dotfiles.restore()
+    shared_file_lists.restore()
+    ssh_files.restore()
+    preferences.restore()
+    app_store_preferences.restore()
+    app_support_fonts.restore()
+    print('Restore Complete.')
+
+
+def invoke_func(args):
+    if args.func is not None:
+        args.func()
+
+
+def configure_logging(verbose):
+    if verbose > 0:
+        log.basicConfig(format="%(message)s", level=log.DEBUG)
+        log.debug('Verbose logging enabled')
+    else:
+        log.basicConfig(format="%(message)s", level=log.INFO)
+
+
+def main():
+    backup_dir = config.get_macprefs_dir()
+    parser = argparse.ArgumentParser(
+        prog='macprefs', description='backup and restore mac system preferences')
+    parser.add_argument('--version', action='version', version=__version__)
+    parser.add_argument('--verbose', '-v', action='count', help='log everything to the console')
+    subparsers = parser.add_subparsers(title='commands', metavar='')
+    backup_parser = subparsers.add_parser(
+        'backup', help='backup preferences to ' + backup_dir)
+    backup_parser.set_defaults(name='backup', func=backup)
+    restore_parser = subparsers.add_parser(
+        'restore', help='restore preferences from ' + backup_dir)
+    restore_parser.set_defaults(name='restore', func=restore)
+    if len(sys.argv) == 1:
+        parser.print_help()
+        sys.exit(0)
+    args = parser.parse_args()
+    verbosity = args.verbose or 0
+    configure_logging(verbosity)
+    invoke_func(args)
+
+
+if __name__ == '__main__':
+    main()
