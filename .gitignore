@@ -1,1 +1,47 @@
+# OS X
 .DS_Store
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Environment variables (Secrets)
+.env
+.venv
+venv/
+ENV/
+
+# Project specific
+github_request.json
+*.tar.gz
+
+# Safety: Prevent accidental backup data inclusion
+# These match the default paths used in config.py
+preferences/
+system_preferences/
+shared_file_lists/
+dotfiles/
+ssh/
+StartupItems/
+Fonts/
+app_store_preferences/
+ApplicationSupport/
